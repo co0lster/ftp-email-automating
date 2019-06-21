@@ -102,7 +102,8 @@ def post(key, name, body):
     # x = response.headers().get('Location')
     # x, discussion_id = x.split('=')
     # print(discussion_id)
-    return discussion_id = " "
+    discussion_id = 'xd'
+    return discussion_id
 
 
 def comment(key, discussion_id, body):
