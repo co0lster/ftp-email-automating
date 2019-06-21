@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 import scrap as scrap
 import ftp as ftp
 import smtp as smtp
-# import textract
+import textract
 import textwrap
 
 import sys
@@ -13,8 +13,6 @@ import time
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QDialog,
                              QProgressBar, QPushButton)
-
-TIME_LIMIT = 100
 
 
 class External(QThread):
@@ -32,15 +30,21 @@ class External(QThread):
     countChanged = pyqtSignal(int)
 
     def run(self):
-        # txt = Example.doc_to_txt(self.filename)
-        txt = "ttest00\ntest00\ntest3"
+        txt = textract.process(self.filename)
+        txt = txt.decode("utf-8")
+        print(txt.split('\n', 2)[1])
+        print('------------------')
+        print(txt[1:])
         self.countChanged.emit(25)
-        # smtp.mail_send(txt, self.pswd_mail, self.login)
+        smtp.mail_send(txt, self.pswd_mail, self.login)
         self.countChanged.emit(50)
-        # ftp.ftp_send(txt, self.pswd_ftp, self.login)
+        ftp.ftp_send(txt, self.pswd_ftp, self.login)
         self.countChanged.emit(75)
         scrap.send_to_forum(self.login, self.pswd_forum, txt)
         self.countChanged.emit(100)
+
+   
+
 
 
 class Example(QWidget):
@@ -53,7 +57,7 @@ class Example(QWidget):
 
     def initUI(self):
         QToolTip.setFont(QFont('SansSerif', 10))
-        app.setWindowIcon(QIcon('icon.png'))
+        app.setWindowIcon(QIcon('icon.jpg'))
 
         btn = QPushButton('Otwórz')
         btn.setToolTip('Załaduj plik .doc z postanowieniami')
@@ -120,8 +124,8 @@ class Example(QWidget):
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
-                                                  "Postanowionka (*.txt)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(self, "Wybierz Postanowienia", "",
+                                                  "Postanowionka (*.doc)", options=options)
         if fileName:
             _, x = fileName.rsplit('/', 1)
             self.label.setText(x)
@@ -131,7 +135,7 @@ class Example(QWidget):
         groupBox = QGroupBox(name)
 
         line.setPlaceholderText("Login")
-        line.setText("okragly")
+        # line.setText("okragly")
 
         line2.setEchoMode(QLineEdit.Password)
         line2.setPlaceholderText("Hasło")
@@ -157,21 +161,6 @@ class Example(QWidget):
                 self.calc.start()
             else:
                 print('No clicked.')
-
-    # text, ok = QDialogButtonBox.getText(self, 'Wyślij')
-    # if ok:
-    # sendtoForum(self.line_nick_forum.text(), self.line_pswd_forum.text(), title, body)
-    # sendtoFtp(self.line_nick_ftp.text(), self.line_pswd_ftp.text(), title, body)
-    # sendtoPoczta(self.line_nick_forum.poczta(), self.line_pswd_poczta.text(), title, body)
-    #         print(self.line_pswd_ftp.text())
-    #         print(self.line_pswd_forum.text())
-
-
-# @staticmethod
-# def doc_to_txt(filename):
-# txt = textract.process(filename)
-# txt = txt.decode("utf-8")
-# return txt
 
 
 if __name__ == '__main__':

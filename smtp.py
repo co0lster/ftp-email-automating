@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 
 def mail_send(postanowienia, mailpswd, login):
     fromaddr = login + "@zak.lodz.pl"
-    toaddr = "all_meryt@zak.lodz.pl,all_tech@zak.lodz.pl"
+    toaddr = login + "@,alternator@"
     msg = MIMEMultipart()
     msg['From'] = fromaddr
     msg['To'] = toaddr

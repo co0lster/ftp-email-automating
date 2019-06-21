@@ -99,10 +99,10 @@ def post(key, name, body):
 
     response = requests.request("POST", url, data=payload, headers=headers)
     # TODO not working TypeError: 'CaseInsensitiveDict' object is not callable
-    x = response.headers().get('Location')
-    x, discussion_id = x.split('=')
-    print(discussion_id)
-    return discussion_id
+    # x = response.headers().get('Location')
+    # x, discussion_id = x.split('=')
+    # print(discussion_id)
+    return discussion_id = " "
 
 
 def comment(key, discussion_id, body):
