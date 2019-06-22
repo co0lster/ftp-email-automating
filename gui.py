@@ -4,8 +4,8 @@ from PyQt5.QtGui import *
 import scrap as scrap
 import ftp as ftp
 import smtp as smtp
-import textract
 import textwrap
+import doc_to_txt
 
 import sys
 import time
@@ -30,21 +30,17 @@ class External(QThread):
     countChanged = pyqtSignal(int)
 
     def run(self):
-        txt = textract.process(self.filename)
-        txt = txt.decode("utf-8")
+        txt = doc_to_txt.convert(self.filename)
         print(txt.split('\n', 2)[1])
         print('------------------')
         print(txt[1:])
-        self.countChanged.emit(25)
-        smtp.mail_send(txt, self.pswd_mail, self.login)
-        self.countChanged.emit(50)
-        ftp.ftp_send(txt, self.pswd_ftp, self.login)
-        self.countChanged.emit(75)
-        scrap.send_to_forum(self.login, self.pswd_forum, txt)
+        # self.countChanged.emit(25)
+        # smtp.mail_send(txt, self.pswd_mail, self.login)
+        # self.countChanged.emit(50)
+        # ftp.ftp_send(txt, self.pswd_ftp, self.login)
+        # self.countChanged.emit(75)
+        # scrap.send_to_forum(self.login, self.pswd_forum, txt)
         self.countChanged.emit(100)
-
-   
-
 
 
 class Example(QWidget):
